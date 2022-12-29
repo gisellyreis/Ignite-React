@@ -16,7 +16,7 @@ interface CyclesContextType {
   markCurrentCycleAsFinished: () => void;
   handleSetSecondsPassed: (seconds: number) => void;
   createNewCycle: (data: CreateCycleData) => void;
-  interrupCurrentCycle: () => void;
+  interruptCurrentCycle: () => void;
 }
 
 export const CyclesContext = createContext({} as CyclesContextType)
@@ -34,6 +34,11 @@ export function CyclesContextProvider({ children }: CyclesContextProviderProps) 
 
     if (storedStateAsJSON) {
       return JSON.parse(storedStateAsJSON)
+    }
+
+    return {
+      cycles: [],
+      activeCycleId: null,
     }
   })
 
@@ -74,11 +79,11 @@ export function CyclesContextProvider({ children }: CyclesContextProviderProps) 
   }
   
   function markCurrentCycleAsFinished() {
-    dispatch(markCurrentCycleAsFinishedAction)
+    dispatch(markCurrentCycleAsFinishedAction())
   }
 
-  function interrupCurrentCycle() { 
-    dispatch(interruptCurrentCycleAction)
+  function interruptCurrentCycle() { 
+    dispatch(interruptCurrentCycleAction())
   }
 
 
@@ -92,7 +97,7 @@ export function CyclesContextProvider({ children }: CyclesContextProviderProps) 
         handleSetSecondsPassed,
         markCurrentCycleAsFinished,
         createNewCycle,
-        interrupCurrentCycle,
+        interruptCurrentCycle,
       }}
     >
       { children }
